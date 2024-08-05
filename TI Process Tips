@@ -1,0 +1,7 @@
+Customer requests to identify the word FTE in the list of available Dimensions. 
+Data source has been set as list of all dimensions. 
+Initially the process was designed to be executed using WHILE loop to search for the key word "FTE".
+As the dimensions are large in number, it was taking forever to complete the execution.
+Then we modified the process to create a MDX subset which filters by pattern.
+If the subset is non empty then that dimension name is extracted in the output file.
+By this way we can quickly completed the task.
