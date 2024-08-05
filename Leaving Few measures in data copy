@@ -1,0 +1,70 @@
+While performing the data copy within the cube, customer wants to parameterized few measures which should not be copied during process execution.
+We got handful of measures in the dimension, hence we created all the elements in the subset then delete all the elements which should not be copied.
+
+pExcludeMeasure = FTE&Annuals&Basics ;
+Annuals is the consolidated note of PAX and Rates.
+
+Below delete all the elements being parameterized-
+
+pExcludeMeasure = TRIM ( pExcludeMeasure ) ;
+
+if ( LONG ( pExcludeMeasure ) > 0 ) ;
+  cMultiElements = SCAN ( '&' , pExcludeMeasure ) ;
+  IF ( cMultiElements > 0 ) ;
+    sEle = SUBST ( pExcludeMeasure , 1 , SCAN ( '&' , pExcludeMeasure ) - 1) ;
+
+    While ( LONG (sEle) > 0 ) ;
+      sEle1 = TRIM ( SUBST ( pExcludeMeasure , SCAN ( '&' , pExcludeMeasure ) + 1 , LONG ( pExcludeMeasure ) )) ;
+      sLevel = ELCOMPN ( dimMeasure , sEle ) ;
+      If ( sLevel = 0 ) ;
+        nIndex = SubsetElementGetIndex( dimMeasure, SubName , sEle , 1);
+        if (nIndex > 0 ) ;
+          SubsetElementDelete ( dimMeasure, SubName , nIndex ) ;
+        endif ;  
+      Else ;
+        nCount = 1 ;
+        While ( sLevel > 0 ) ;
+          sChild = ELCOMP ( dimMeasure , sEle , nCount ) ; 
+          nIndex = SubsetElementGetIndex( dimMeasure, SubName , sChild , 1);
+          if (nIndex > 0 ) ;
+            SubsetElementDelete ( dimMeasure, SubName , nIndex ) ;
+          endif ;  
+          nCount = nCount + 1 ;
+          sLevel = sLevel - 1 ;
+        End ; 
+      EndIf ; 
+             
+      if ( SCAN ( '&' , pExcludeMeasure ) > 0 ) ;
+        sEle = TRIM ( SUBST ( sEle1 , 1 , SCAN ( '&' , sEle1 ) - 1 ) ) ;
+        pExcludeMeasure = TRIM ( SUBST ( sEle1 ,  SCAN ( '&' , sEle1 ) , long(pExcludeMeasure) ) ) ;
+        if ( SCAN ( '&' , sEle1 ) = 0 ) ;
+          sEle = sEle1 ;
+        EndIf ;  
+      Else ;
+        sEle = '' ;
+      EndIF;  
+    End ;
+  Else ;  
+    sLevel = ELCOMPN ( dimMeasure , pExcludeMeasure ) ;
+    If ( sLevel = 0 ) ;
+      nIndex = SubsetElementGetIndex( dimMeasure, SubName , pExcludeMeasure , 1);
+      if (nIndex > 0 ) ;
+        SubsetElementDelete ( dimMeasure, SubName , nIndex ) ;
+      endif ;  
+    Else ;
+      nCount = 1 ;
+
+      While ( sLevel > 0 ) ;
+        sChild = ELCOMP ( dimMeasure , pExcludeMeasure , nCount ) ; 
+        nIndex = SubsetElementGetIndex( dimMeasure, SubName , sChild , 1);
+
+        if (nIndex > 0 ) ;
+          SubsetElementDelete ( dimMeasure, SubName , nIndex ) ;
+        endif ;
+        nCount = nCount + 1 ;
+        sLevel = sLevel - 1 ;        
+      End ; 
+    EndIf ;  
+  EndIf ;
+  
+EndIF ;  
