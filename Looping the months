@@ -1,0 +1,25 @@
+During Forecast period customer wants to copy data from Specific months with Start and End Months as parameters.
+Below is the sample code to create subset by looping months.
+
+pMonthFrom = 'Jan' ;
+pMonthTo = 'Jun' ;
+Dimname = 'Month' ;
+cSubName = 'Subset name' ;
+cMonthFrom = Numbr(DimensionElementPrincipalName('Month',pMonthFrom));
+cMonthTo = Numbr(DimensionElementPrincipalName('Month', pMonthTo));
+nCount = 1 ;
+
+IF ( pMonthFrom @<> '' ) ;
+	while ( cMonthFrom <= cMonthTo ) ;
+		If ( cMonthFrom < 10 ) ;
+			cMonth = '0' | NumberToString(cMonthFrom ) ;
+		Else;
+			cMonth = NumberToString(cMonthFrom ) ;	
+		Endif;
+		
+		SUBSETELEMENTINSERT ( Dimname , cSubName , cMonth , nCount )
+		
+		cMonthFrom = cMonthFrom + 1;
+    nCount = nCount + 1 ;
+	End;
+	
