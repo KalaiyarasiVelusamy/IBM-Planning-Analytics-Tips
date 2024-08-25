@@ -1,0 +1,4 @@
+The customer requested identifying the term "FTE" within the available Dimensions. 
+Initially, a WHILE loop was used to search through all dimensions, but this approach was slow due to the large number of dimensions. 
+We then optimized the process by creating an MDX subset that filters by pattern. 
+If the subset contains results, the dimension name is extracted into the output file, allowing for faster completion of the task.
