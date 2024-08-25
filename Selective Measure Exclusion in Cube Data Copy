@@ -1,5 +1,7 @@
-While performing the data copy within the cube, customer wants to parameterized few measures which should not be copied during process execution.
-We got handful of measures in the dimension, hence we created all the elements in the subset then delete all the elements which should not be copied.
+While executing a data copy within the cube, the customer requested that certain measures be excluded from the process. 
+To accommodate this, we first added all the measures to a subset, then removed the specific elements that should not be copied during execution.
+
+Exact code below for reference - 
 
 pExcludeMeasure = FTE&Annuals&Basics ;
 Annuals is the consolidated note of PAX and Rates.
