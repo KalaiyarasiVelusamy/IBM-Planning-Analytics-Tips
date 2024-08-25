@@ -1,5 +1,6 @@
-During Forecast period customer wants to copy data from Specific months with Start and End Months as parameters.
-Below is the sample code to create subset by looping months.
+During the forecast period, the customer needs to copy data from specific months, with the start and end months set as parameters. 
+
+Below is an example code to create a subset by iterating through the months.
 
 pMonthFrom = 'Jan' ;
 pMonthTo = 'Jun' ;
