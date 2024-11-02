@@ -1,0 +1,52 @@
+Powershell script to send mail from TM1 TI process.
+
+
+sFrom =  'noreply@xxx.com';
+sSubject = pEmailSubject;
+sBody = pEmailBody;
+sSmtpServer = 'smtp.xxx.com';
+
+EmailDim = 'email receipt';
+
+sTo = pRecipient;
+
+
+IF(pAttachement @='');
+
+# build powershell command
+sPsCmd = '"& {
+Send-MailMessage
+-From ' | sFrom | '
+-To ' | sTo | '
+-Subject ' | '\"' | sSubject | '\"
+-BodyasHtml ' | '\"' | sBody | '\"
+-SmtpServer ' | sSmtpServer | '
+}"';
+ElseIf(pAttachement @<>''& FileExists(pAttachement) <> 0);
+# build powershell command
+sPsCmd = '"& {
+Send-MailMessage
+-From ' | sFrom | '
+-To ' | sTo | '
+-Subject ' | '\"' | sSubject | '\"
+-BodyasHtml ' | '\"' | sBody | '\"
+-Attachment ' | '\"' | pAttachement | '\"
+-SmtpServer ' | sSmtpServer | '
+}"';
+ElseIf(pAttachement @<>''& FileExists(pAttachement) = 0);
+# build powershell command
+sPsCmd = '"& {
+Send-MailMessage
+-From ' | sFrom | '
+-To ' | sTo | '
+-Subject ' | '\"' | sSubject | '\"
+-BodyasHtml ' | '\"' | sBody | '\"
+-SmtpServer ' | sSmtpServer | '
+}"';
+Endif;
+
+
+
+
+# execute command
+ExecuteCommand ( 'powershell.exe -command ' | sPsCmd, 0 );
