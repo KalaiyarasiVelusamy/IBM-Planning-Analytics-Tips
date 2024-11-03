@@ -1,0 +1,37 @@
+Batch script for transferring a folder from one server to another. 
+Once the files are successfully copied to the target server, compress them.
+
+
+Below scripts for reference - 
+@echo off
+
+for /f "delims=" %%a in ('wmic OS Get localdatetime ^| find "."') do set DateTime=%%a
+
+set Yr=%DateTime:~0,4%
+set Mon=%DateTime:~4,2%
+set Day=%DateTime:~6,2%
+set Hr=%DateTime:~8,2%
+set Min=%DateTime:~10,2%
+set Sec=%DateTime:~12,2%
+set /A yest = 3
+set /A Yesterday = %Day%-%yest%
+
+set date=%Mon%-%Day%-%Yr%
+set monyear=%Mon%-%Yr%
+set datestamp=%Yr%%Mon%%Day%
+set timestamp=%Hr%%Min%%Sec%
+set fullstamp=%Yr%%Mon%%Day%%Hr%%Min%%Sec%
+echo day: %Day%
+echo datestamp: %datestamp%
+echo timestamp: %timestamp%
+echo fullstamp: Data_%fullstamp%
+
+
+:: Move Log files modified today - Should run before 12AM every day - 11:50PM as BACKUP RUNS ON 11:30PM
+xcopy \\baseFolder\E$\TM1\Logs\tm1s2*.log \\targetserver\F$\PlanningAnalyticsDailyBackup\Logs\Log_%monyear% /Y /O /K /C /D:%date%
+
+:: perform ZIP operation on backup
+"C:\Program Files\7-Zip\7z.exe" a -t7z \\basefolder\E$\TM1\Backup\Data_Backup_Zip\Data_%fullstamp%.zip \\basefolder\E$\TM1\Data
+
+:: Delete files which are older than 180 days - 
+forfiles -p "E:\TM1\Backup\Data_Backup_Zip" -s -m *.zip -d -181 -c "cmd /c del @path"
