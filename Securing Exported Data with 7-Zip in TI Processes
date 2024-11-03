@@ -1,0 +1,26 @@
+
+In TM1 TurboIntegrator (TI) processes, there’s no native support to zip files with password protection directly. 
+However, you can achieve this by using command line utilities such as 7-Zip or WinRAR in combination with a TI process.
+
+Below is a step-by-step guide using 7-Zip, which is free and widely used:
+
+Prerequisites
+1. Install 7-Zip: Download and install 7-Zip, and ensure it’s accessible in your system path or specify the full path to the 7z.exe executable in the TI script.
+2. Determine File Paths: Make sure to know the location of the file to be zipped and the destination where the zipped file should be stored.
+
+
+Below TI process code for reference:-
+# Define the file path and name variables
+vExportFile = 'C:\path\to\exportfile.csv';    # Path to the export file
+vZipFile = 'C:\path\to\exportfile.zip';       # Path to the output zip file
+vPassword = 'YourPasswordHere';               # Password for the zip file
+
+# Define the 7-Zip command to zip with a password
+# Adjust the path to 7z.exe if necessary
+vCommand = '"C:\Program Files\7-Zip\7z.exe" a -p' | vPassword | ' ' | vZipFile | ' ' | vExportFile;
+
+# Execute the command
+ExecuteCommand(vCommand, 1);
+
+# Optional logging for confirmation
+AsciiOutput('ZipProcessLog.txt', 'File zipped successfully:', vZipFile, 'with password.');
