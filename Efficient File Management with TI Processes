@@ -1,0 +1,17 @@
+To delete files older than 180 days in a TM1 TurboIntegrator (TI) process, 
+you can use the ExecuteCommand function in combination with a shell command that finds and deletes such files. 
+Below is a step-by-step guide on how to implement this.
+
+
+TI process code for reference:
+# Define the directory containing the files
+vDirectory = 'C:\path\to\your\directory';  # Change this to your target directory
+
+# Define the command to find and delete files older than 180 days
+vCommand = 'forfiles /p "' | vDirectory | '" /s /m *.* /d -180 /c "cmd /c del @path"';
+
+# Execute the command
+ExecuteCommand(vCommand, 1);
+
+# Optional logging for confirmation
+AsciiOutput('DeleteOldFilesLog.txt', 'Files older than 180 days deleted from:', vDirectory);
