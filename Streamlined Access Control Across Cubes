@@ -1,0 +1,16 @@
+
+To maintain cell security in TM1:
+
+Set up a standalone cube that includes dimensions for version, year, month, group, and measures.
+Define the type of access each group should have.
+Create a cell security cube for every cube that requires security settings.
+    TI process to create the cell security cube, refer the object - "sys_CellSecurityCube_Create"
+Apply security to each cube by referencing the standalone cube through rules.
+This approach allows for centralized management of security settings across all cubes, simplifying maintenance.
+
+Refer the below rule to be applied in the newly created }cellsecuritycubes.
+ []=S:Cellgets(DB('sysSecurityAssignment',!Version,!Year,!months,!SysGroup,'SecurityAssign'));
+
+Objects to refer-
+  sys_CellSecurityCube_Create.pro
+  sysSecurityAssignment.cub
